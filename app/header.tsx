@@ -13,12 +13,13 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import NextLink from 'next/link';
 import { routes, unauthorizedRoutes } from './common/constants/routes';
 import Link from 'next/link';
 import { logout } from './auth/logout';
 import { AuthContext } from './auth/auth-context';
 import { Code } from '@mui/icons-material';
-
+import ThemeToggleButton from './components/themetogglebutton';
 
 
 export default function Header() {
@@ -26,11 +27,9 @@ export default function Header() {
 
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
-
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
     };
-
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
@@ -46,7 +45,6 @@ export default function Header() {
                         <Typography
                             variant="h6"
                             noWrap
-                            component="a"
                             sx={{
                                 mr: 2,
                                 display: { xs: 'none', md: 'flex' },
@@ -90,37 +88,35 @@ export default function Header() {
                         >
                             {pages.map((page) => (
                                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
-                                    <Link href={page.path} passHref legacyBehavior>
-                                        <Typography sx={{ textAlign: 'center' }}>
-                                            {page.title}
-                                        </Typography>
-                                    </Link>
+
+                                    <Typography sx={{ textAlign: 'center' }} component={NextLink} href={page.path} >
+                                        {page.title}
+                                    </Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
                     </Box>
                     <Code sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-                    <Link href={"/"} passHref>
-                        <Typography
-                            variant="h5"
-                            noWrap
-                            component="a"
-                            href="/"
-                            sx={{
-                                mr: 2,
-                                display: { xs: 'flex', md: 'none' },
-                                flexGrow: 1,
-                                fontFamily: 'monospace',
-                                fontWeight: 700,
-                                letterSpacing: '.3rem',
-                                color: 'inherit',
-                                textDecoration: 'none',
-                            }}
-                        >
-                            DevJobs
-                        </Typography>
-                    </Link>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} className={`gap-4 right-0.5`}>
+
+                    <Typography
+                        variant="h5"
+                        noWrap
+                        component={NextLink}
+                        href="/"
+                        sx={{
+                            mr: 2,
+                            display: { xs: 'flex', md: 'none' },
+                            flexGrow: 1,
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            letterSpacing: '.3rem',
+                            textDecoration: 'none',
+                        }}
+                    >
+                        DevJobs
+                    </Typography>
+
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} className={`gap-4`}>
                         {pages.map((page) => (
                             <Link href={page.path} passHref key={page.title}>
                                 <Typography sx={{ my: 2, color: 'white', display: 'block' }} onClick={handleCloseNavMenu}>
@@ -130,6 +126,8 @@ export default function Header() {
                         ))}
                     </Box>
                     {isAuthenticated && <Settings />}
+                    {!isAuthenticated && <LoginButton />}
+                    <ThemeToggleButton />
                 </Toolbar>
             </Container>
         </AppBar>
@@ -170,10 +168,22 @@ const Settings = () => {
                 onClose={handleCloseUserMenu}
             >
                 <MenuItem key="Logout" onClick={handleCloseUserMenu}>
-                    <Typography sx={{ textAlign: 'center' }} onClick={logout}>Logout</Typography>
+                    <Typography sx={{ textAlign: 'center' }}
+                        onClick={() => {
+                            logout(); // Gọi server action
+                        }}>Logout</Typography>
                 </MenuItem>
             </Menu>
         </Box>
     );
 }
 
+const LoginButton = () => {
+    return (
+        <Link href="/auth/login" passHref>
+            <Button variant="contained" sx={{ my: 2, color: 'white', display: 'block' }}>
+                Login
+            </Button>
+        </Link>
+    );
+}

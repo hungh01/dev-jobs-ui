@@ -6,6 +6,6 @@ export async function logout() {
     const cookieStore = await cookies();
     const res = cookieStore.delete("Authentication");
     if (res) {
-        redirect("/login");
+        redirect("/");
     }
 }
