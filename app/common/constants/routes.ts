@@ -1,22 +1,18 @@
 
 export const unauthorizedRoutes = [
     {
-        title: "Login",
-        path: "/auth/login",
-    },
-    {
-        title: "tete",
-        path: "/auth/login",
+        title: "Find jobs",
+        path: "/",
     },
 ]
 
 export const routes = [
     {
-        title: "Home",
+        title: "Find jobs",
         path: "/",
     },
     {
-        title: "Company reviews",
-        path: "/",
+        title: "Your CV",
+        path: "/CV",
     },
 ]
