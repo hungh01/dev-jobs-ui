@@ -12,7 +12,7 @@ export const routes = [
         path: "/",
     },
     {
-        title: "Your CV",
-        path: "/CV",
+        title: "Your Job",
+        path: "/your-job",
     },
 ]

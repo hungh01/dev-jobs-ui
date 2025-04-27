@@ -1,9 +1,11 @@
 import { Box, Card, CardActionArea, Chip, Stack, Typography } from "@mui/material";
-import { JobItem } from "./interface/job";
-import CompanyLogo from "./company-logo";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import addJob from "./actions/add-job";
+
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 import { useState } from "react";
+import { JobItem } from "@/app/providers";
+import CompanyLogo from "@/app/components/company-logo";
+import deleteJob from "../actions/delete-job";
 
 export default function Job(job: JobItem) {
     const [isLoading, setLoading] = useState(false);
@@ -14,19 +16,19 @@ export default function Job(job: JobItem) {
 
         setLoading(true);
         try {
-            const response = await addJob(job);
+            const response = await deleteJob(job.id.toString());
             if (response) {
-                if (response.data) {
+                if (response.ok) {
                     alert("Job added successfully!");
                 } else {
                     alert("Failed to add job");
                 }
             } else {
-                alert("Failed to add job");
+                alert("Failed to delete job");
             }
         }
         catch (error) {
-            alert("Failed to add job");
+            alert("Failed to delete job");
         }
         finally {
             setLoading(false);
@@ -62,11 +64,11 @@ export default function Job(job: JobItem) {
                         </Box>
                     </Box>
 
-                    {/* Nút add favorite */}
+                    {/* Nút Xoá */}
                     <Box position="absolute" top={8} right={8}>
                         <Chip
-                            icon={<FavoriteBorderIcon />}
-                            label={isLoading ? "Adding..." : "Add to favorites"}
+                            icon={<DeleteForeverIcon />}
+                            label={isLoading ? "Delete..." : "Delete"}
                             onClick={handleClick}
                             sx={{ backgroundColor: 'transparent', cursor: "pointer" }}
                         />

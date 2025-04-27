@@ -1,10 +1,8 @@
 import { Box, Grid, Pagination } from "@mui/material";
-
 import Job from "./job";
-import { JobItem } from "./interface/job";
-import { useContext } from "react";
-import { ThemeModeContext } from "../providers";
-import Circular from "./circular";
+
+import Circular from "@/app/components/circular";
+import { JobItem } from "@/app/components/interface/job";
 
 interface JobsResultProps {
     jobs: {
@@ -31,16 +29,12 @@ export default function JobsResult({ jobs, onPageChange, loading }: JobsResultPr
                 justifyContent="center"
                 minHeight="100vh" // Hoặc 100vh nếu muốn căn giữa toàn trang
             >
-                Tìm việc làm của bạn.
+                Bạn đang không lưu trữ việc làm nào.
             </Box>
         );
     }
 
     const { items, totalPages, currentPage } = jobs;
-
-    if (!Array.isArray(items) || items.length === 0) {
-        return <div>No jobs available</div>;
-    }
 
     if (loading) {
         return <Circular />;

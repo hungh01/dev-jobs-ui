@@ -2,6 +2,7 @@
 import { API_URL } from "../constants/api";
 import { cookies } from "next/headers";
 import { getErrorMessage } from "./errors";
+import { revalidateTag } from "next/cache";
 
 
 export const getHeaders = async () => {
@@ -29,11 +30,15 @@ export const post = async (path: string, data: FormData | object) => {
     if (!res.ok) {
         return { error: getErrorMessage(parsedRes) };
     }
+    if (res.ok) {
+        await revalidateTag('your-jobs');
+    }
     return { error: "", data: parsedRes };
 };
 
 export const get = async <T>(path: string, tags?: string[], params?: URLSearchParams) => {
     const url = params ? `${API_URL}/${path}?${params.toString()}` : `${API_URL}/${path}`;
+
     const headers = await getHeaders();
     const res = await fetch(url, {
         method: "GET",
@@ -43,13 +48,11 @@ export const get = async <T>(path: string, tags?: string[], params?: URLSearchPa
     return res.json() as T;
 };
 
-
-export const getJobs = async <T>(path: string, tags?: string[], jobTitle?: string, location?: string) => {
+export const getYourJobs = async <T>(path: string, tags?: string[], page?: string, limit?: string) => {
     const params = new URLSearchParams();
 
-
-    if (jobTitle) params.append("jobTitle", jobTitle);
-    if (location) params.append("location", location);
+    if (page) params.append("page", page);
+    if (limit) params.append("limit", limit);
 
     const url = params ? `${API_URL}/${path}?${params.toString()}` : `${API_URL}/${path}`;
 
@@ -61,3 +64,40 @@ export const getJobs = async <T>(path: string, tags?: string[], jobTitle?: strin
     });
     return res.json() as T;
 };
+
+
+export const getJobs = async <T>(path: string, tags?: string[], jobTitle?: string, location?: string, page?: string, limit?: string) => {
+    const params = new URLSearchParams();
+
+    if (jobTitle) params.append("jobTitle", jobTitle);
+    if (location) params.append("location", location);
+    if (page) params.append("page", page);
+    if (limit) params.append("limit", limit);
+
+    const url = params ? `${API_URL}/${path}?${params.toString()}` : `${API_URL}/${path}`;
+
+    const headers = await getHeaders();
+    const res = await fetch(url, {
+        method: "GET",
+        headers,
+        next: { tags },
+    });
+    return res.json() as T;
+};
+
+export const removeJob = async (path: string, jobId: string) => {
+    const headers = await getHeaders();
+    const params = new URLSearchParams();
+    params.append("jobId", jobId);
+
+    const url = `${API_URL}/${path}?${params.toString()}`;
+    console.log("url", url);
+    const res = await fetch(url, {
+        method: "DELETE",
+        headers,
+    });
+    if (res.ok) {
+        await revalidateTag('your-jobs');
+    }
+    return res.json();
+}
