@@ -3,39 +3,57 @@
 import {
     Box,
     Button,
+    Checkbox,
+    Chip,
     Divider,
+    FormControl,
+    FormControlLabel,
+    FormGroup,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Select,
     TextField,
+    Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import PlaceIcon from "@mui/icons-material/Place";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ThemeModeContext } from "../providers";
 import searchJobs from "./actions/search-jobs";
+import { provinces } from "../common/constants/provinces";
+
+
 
 export default function SearchBar() {
-    const { jobs, setJobs } = useContext(ThemeModeContext);
+    const { jobs, setJobs, setLoading } = useContext(ThemeModeContext);
+    const [selectedProvinces, setSelectedProvinces] = useState<string[]>([]);
+
+    const handleChange = (key: string) => {
+        setSelectedProvinces(prev =>
+            prev.includes(key) ? prev.filter(p => p !== key) : [...prev, key]
+        );
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const jobTitle = formData.get("jobTitle") as string;
-        const location = formData.get("location") as string;
-
-        const response = await searchJobs(jobTitle, location); // Gọi API
-        setJobs(response); // Set lại state
+        setLoading(true);
+        try {
+            const formData = new FormData(e.currentTarget);
+            const jobTitle = formData.get("jobTitle") as string;
+            const location = selectedProvinces.join('-');
+            const response = await searchJobs(jobTitle, location);
+            setJobs(response);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit} >
-            <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                py={4}
-                px={2}
-            >
+        <form onSubmit={handleSubmit}>
+            <Box display="flex" justifyContent="center" alignItems="center" py={4} px={2}>
                 <Box
                     display="flex"
-                    flexDirection={{ xs: "column", sm: "row" }} // responsive direction
+                    flexDirection={{ xs: "column", sm: "row" }}
                     borderRadius={3}
                     boxShadow={3}
                     overflow="hidden"
@@ -44,7 +62,7 @@ export default function SearchBar() {
                     gap={{ xs: 2, sm: 0 }}
                     p={{ xs: 2, sm: 0 }}
                 >
-                    {/* Search input */}
+                    {/* Job Title */}
                     <Box
                         display="flex"
                         alignItems="center"
@@ -63,33 +81,41 @@ export default function SearchBar() {
                         />
                     </Box>
 
-                    {/* Divider chỉ hiển thị khi ở màn hình lớn */}
+                    {/* Divider */}
                     <Divider
                         orientation="vertical"
                         flexItem
                         sx={{ display: { xs: "none", sm: "block" } }}
                     />
 
-                    {/* Location input */}
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        px={2}
-                        flex={1}
-                        height={60}
-                        width={{ xs: "100%", sm: "auto" }}
-                    >
-                        <PlaceIcon sx={{ mr: 1, color: "gray" }} />
-                        <TextField
-                            name="location"
-                            fullWidth
-                            placeholder="Location"
-                            variant="standard"
-                            InputProps={{ disableUnderline: true }}
-                        />
-                    </Box>
+                    {/* Location checkboxes */}
+                    <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+                        <InputLabel id="province-select-label">Tỉnh thành</InputLabel>
+                        <Select
+                            labelId="province-select-label"
+                            multiple
+                            value={selectedProvinces}
+                            onChange={(e) => setSelectedProvinces(e.target.value as string[])}
+                            input={<OutlinedInput label="Tỉnh thành" />}
+                            renderValue={(selected) => (
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                    {(selected as string[]).map((value) => {
+                                        const name = provinces.find(p => p.key === value)?.name;
+                                        return <Chip key={value} label={name} />;
+                                    })}
+                                </Box>
+                            )}
+                        >
+                            {provinces.map((province) => (
+                                <MenuItem key={province.key} value={province.key}>
+                                    {province.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
 
-                    {/* Button */}
+
+                    {/* Submit Button */}
                     <Box
                         display="flex"
                         alignItems="center"

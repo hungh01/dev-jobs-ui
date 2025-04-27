@@ -1,6 +1,4 @@
-
-
-export interface JobValue {
+export type JobItem = {
     id: number;
     img: string;
     title: string;
@@ -9,6 +7,14 @@ export interface JobValue {
     salary: string;
     exp: string;
     url: string;
+};
 
-}
-//img, title, companyName, city, salary, exp, url 
+export type JobValue = {
+    keyword?: string;
+    location?: string;
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+    pageSize: number;
+    items: JobItem[];
+};

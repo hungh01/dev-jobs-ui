@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
       'cdn.vietnamworks.com',
       'images.vietnamworks.com',
       'www.topcv.vn',
+      'images.careerviet.vn',
+      'static.careerviet.vn'
     ],
   },
 };
