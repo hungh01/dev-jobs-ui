@@ -49,6 +49,7 @@ export default function YourJob() {
                 }
             }}
             loading={loading}
+            setJobs={setJobs}
         />
     );
 }

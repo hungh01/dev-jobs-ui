@@ -65,7 +65,6 @@ export const getYourJobs = async <T>(path: string, tags?: string[], page?: strin
     return res.json() as T;
 };
 
-
 export const getJobs = async <T>(path: string, tags?: string[], jobTitle?: string, location?: string, page?: string, limit?: string) => {
     const params = new URLSearchParams();
 
@@ -96,6 +95,7 @@ export const removeJob = async (path: string, jobId: string) => {
         method: "DELETE",
         headers,
     });
+    console.log("res", res.ok);
     if (res.ok) {
         await revalidateTag('your-jobs');
     }
