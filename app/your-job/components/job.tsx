@@ -57,7 +57,7 @@ export default function Job({ job, setJobs }: JobProps) {
             setSeverity('error');
         } finally {
             setLoading(false);
-            setTimeout(() => setOpen(true), 0);
+            setOpen(true);
         }
     }
     useEffect(() => {
