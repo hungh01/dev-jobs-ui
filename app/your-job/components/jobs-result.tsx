@@ -3,6 +3,7 @@ import Job from "./job";
 
 import Circular from "@/app/components/circular";
 import { JobItem } from "@/app/components/interface/job";
+import { JobValue } from "@/app/providers";
 
 interface JobsResultProps {
     jobs: {
@@ -16,11 +17,10 @@ interface JobsResultProps {
     };
     onPageChange?: (page: number) => void;
     loading: boolean;
+    setJobs: React.Dispatch<React.SetStateAction<JobValue | null>>;
 }
 
-export default function JobsResult({ jobs, onPageChange, loading }: JobsResultProps) {
-
-
+export default function JobsResult({ jobs, onPageChange, loading, setJobs }: JobsResultProps) {
 
     if (!jobs) {
         return (
@@ -40,6 +40,18 @@ export default function JobsResult({ jobs, onPageChange, loading }: JobsResultPr
         return <Circular />;
     }
 
+    if (!Array.isArray(items) || items.length === 0) {
+        return (
+            <Box
+                display="flex"
+                justifyContent="center"
+                minHeight="100vh" // Hoặc 100vh nếu muốn căn giữa toàn trang
+            >
+                Bạn đang không lưu trữ việc làm nào.
+            </Box>
+        );
+    }
+
     const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
         onPageChange?.(value);
     };
@@ -48,7 +60,7 @@ export default function JobsResult({ jobs, onPageChange, loading }: JobsResultPr
         <>
             <Grid container spacing={3}>
                 {items.map((job) => (
-                    <Job key={job.id} {...job} />
+                    <Job key={job.id} job={job} setJobs={setJobs} />
                 ))}
             </Grid>
 
