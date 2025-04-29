@@ -2,9 +2,10 @@ import { Box, Grid, Pagination } from "@mui/material";
 
 import Job from "./job";
 import { JobItem } from "./interface/job";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ThemeModeContext } from "../providers";
 import Circular from "./circular";
+import AlertBox from "./alert";
 
 interface JobsResultProps {
     jobs: {
@@ -22,7 +23,15 @@ interface JobsResultProps {
 
 export default function JobsResult({ jobs, onPageChange, loading }: JobsResultProps) {
 
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState('');
+    const [severity, setSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('success');
 
+    const handleAlert = (msg: string, sev: 'success' | 'error' | 'warning' | 'info') => {
+        setMessage(msg);
+        setSeverity(sev);
+        setOpen(true);
+    };
 
     if (!jobs) {
         return (
@@ -52,9 +61,10 @@ export default function JobsResult({ jobs, onPageChange, loading }: JobsResultPr
 
     return (
         <>
+            <AlertBox setOpen={setOpen} open={open} severity={severity} message={message} />
             <Grid container spacing={3}>
                 {items.map((job) => (
-                    <Job key={job.id} {...job} />
+                    <Job key={job.id} job={job} onAlert={handleAlert} />
                 ))}
             </Grid>
 

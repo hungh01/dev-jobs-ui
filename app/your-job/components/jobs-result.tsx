@@ -5,6 +5,9 @@ import Circular from "@/app/components/circular";
 import { JobItem } from "@/app/components/interface/job";
 import { JobValue } from "@/app/providers";
 
+import { useState } from "react";
+import AlertBox from "@/app/components/alert";
+
 interface JobsResultProps {
     jobs: {
         keyword?: string;
@@ -20,7 +23,17 @@ interface JobsResultProps {
     setJobs: React.Dispatch<React.SetStateAction<JobValue | null>>;
 }
 
+
 export default function JobsResult({ jobs, onPageChange, loading, setJobs }: JobsResultProps) {
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState('');
+    const [severity, setSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('success');
+
+    const handleAlert = (msg: string, sev: 'success' | 'error' | 'warning' | 'info') => {
+        setMessage(msg);
+        setSeverity(sev);
+        setOpen(true);
+    };
 
     if (!jobs) {
         return (
@@ -56,17 +69,19 @@ export default function JobsResult({ jobs, onPageChange, loading, setJobs }: Job
         onPageChange?.(value);
     };
 
+
     return (
         <>
+            <AlertBox setOpen={setOpen} open={open} severity={severity} message={message} />
             <Grid container spacing={3}>
                 {items.map((job) => (
-                    <Job key={job.id} job={job} setJobs={setJobs} />
+                    <Job key={job.id} job={job} setJobs={setJobs} onAlert={handleAlert} />
                 ))}
             </Grid>
 
             <Box display="flex" justifyContent="center" mt={4}>
                 <Pagination
-                    count={totalPages}
+                    count={totalPages ? totalPages : 1}
                     page={currentPage}
                     onChange={handleChange}
                     color="primary"

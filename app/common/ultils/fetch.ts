@@ -90,12 +90,11 @@ export const removeJob = async (path: string, jobId: string) => {
     params.append("jobId", jobId);
 
     const url = `${API_URL}/${path}?${params.toString()}`;
-    console.log("url", url);
     const res = await fetch(url, {
         method: "DELETE",
         headers,
     });
-    console.log("res", res.ok);
+
     if (res.ok) {
         await revalidateTag('your-jobs');
     }
