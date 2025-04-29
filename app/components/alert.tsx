@@ -11,13 +11,12 @@ type AlertBoxProps = {
 export default function AlertBox({ setOpen, open, severity, message }: AlertBoxProps) {
 
     const handleClose = () => {
-        setTimeout(() => setOpen(false), 3000);
+        setOpen(false);
     };
 
-    console.log("AlertBox rendered with severity:", severity, "and message:", message, "open:", open);
 
     return (
-        <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
+        <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
             <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
                 {message}
             </Alert>

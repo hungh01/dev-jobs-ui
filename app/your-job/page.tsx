@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import getJob from "../components/actions/get-job";
 
-import { JobValue, } from "../providers";
 import JobsResult from "./components/jobs-result";
+import { JobValue } from "../components/interface/job";
 
 
 
@@ -35,8 +35,8 @@ export default function YourJob() {
                     try {
                         setLoading(true);
                         const response = await getJob(
-                            newPage.toString(),
-                            jobs.pageSize.toString()
+                            newPage ? newPage.toString() : undefined,
+                            jobs.pageSize ? jobs.pageSize.toString() : undefined,
                         );
                         setJobs(response);
                     } catch (error) {

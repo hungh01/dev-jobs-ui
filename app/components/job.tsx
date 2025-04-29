@@ -1,12 +1,21 @@
 import { Box, Card, CardActionArea, Chip, Stack, Typography } from "@mui/material";
-import { JobItem } from "./interface/job";
+import { JobItem, JobValue } from "./interface/job";
 import CompanyLogo from "./company-logo";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import addJob from "./actions/add-job";
 import { useState } from "react";
 
-export default function Job(job: JobItem) {
+
+type JobProps = {
+    job: JobItem;
+    onAlert: (message: string, severity: 'success' | 'error' | 'warning' | 'info') => void;
+};
+
+
+export default function Job({ job, onAlert }: JobProps) {
     const [isLoading, setLoading] = useState(false);
+
+
 
     const handleClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation(); // Ngăn click lan lên CardActionArea
@@ -17,16 +26,16 @@ export default function Job(job: JobItem) {
             const response = await addJob(job);
             if (response) {
                 if (response.data) {
-                    alert("Job added successfully!");
+                    onAlert('Xóa thành công!', 'success');
                 } else {
                     alert("Failed to add job");
                 }
             } else {
-                alert("Failed to add job");
+                onAlert('Xóa thất bại!', 'error');
             }
         }
         catch (error) {
-            alert("Failed to add job");
+            onAlert('Có lỗi xảy ra!', 'error');
         }
         finally {
             setLoading(false);

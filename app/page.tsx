@@ -21,7 +21,7 @@ export default function Home() {
                 jobs.keyword || "",
                 jobs.location || "",
                 newPage.toString(),
-                jobs.pageSize.toString()
+                jobs.pageSize ? jobs.pageSize.toString() : '5',
               );
               setJobs(response);
             } catch (error) {

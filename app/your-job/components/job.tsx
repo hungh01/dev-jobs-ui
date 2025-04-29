@@ -1,4 +1,4 @@
-import { Box, Card, Chip, Stack, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, Chip, Stack, Typography } from "@mui/material";
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
@@ -6,18 +6,16 @@ import { useEffect, useState } from "react";
 
 import CompanyLogo from "@/app/components/company-logo";
 import { JobItem, JobValue } from "@/app/components/interface/job";
-import AlertBox from "./alert";
+
 
 type JobProps = {
     job: JobItem;
     setJobs: React.Dispatch<React.SetStateAction<JobValue | null>>;
+    onAlert: (message: string, severity: 'success' | 'error' | 'warning' | 'info') => void;
 };
 
-export default function Job({ job, setJobs }: JobProps) {
+export default function Job({ job, setJobs, onAlert }: JobProps) {
     const [isLoading, setLoading] = useState(false);
-    const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState('');
-    const [severity, setSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('success');
 
 
     const handleClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -46,18 +44,14 @@ export default function Job({ job, setJobs }: JobProps) {
                         totalPages: Math.ceil((prevJobs.totalItems - 1) / prevJobs.pageSize),
                     };
                 });
-                setMessage('Xóa thành công!');
-                setSeverity('success');
+                onAlert('Xóa thành công!', 'success');
             } else {
-                setMessage('Xóa thất bại!');
-                setSeverity('error');
+                onAlert('Xóa thất bại!', 'error');
             }
         } catch (error) {
-            setMessage('Có lỗi xảy ra!');
-            setSeverity('error');
+            onAlert('Có lỗi xảy ra!', 'error');
         } finally {
             setLoading(false);
-            setOpen(true);
         }
     }
     useEffect(() => {
@@ -65,11 +59,14 @@ export default function Job({ job, setJobs }: JobProps) {
     }, [open]);  // Lắng nghe thay đổi của open
 
     return (
-        <>
-            <AlertBox setOpen={setOpen} open={open} severity={severity} message={message} />
-            <Box display="flex" justifyContent="space-between" alignItems="flex-start" gap={2}
+        <Card sx={{ position: "relative", p: 2, width: '100%' }}>
+            <CardActionArea
+                component="a"
+                href={job.url}
+                target="_blank"
+                rel="noopener noreferrer"
             >
-                <Card className="p-4" sx={{ position: "relative" }}>
+                <Box display="flex" justifyContent="space-between" alignItems="flex-start" gap={2}>
                     <Box display="flex" justifyContent="space-between" alignItems="flex-start" gap={2}>
                         {/* Left content */}
                         <Box display="flex" gap={2}>
@@ -91,19 +88,20 @@ export default function Job({ job, setJobs }: JobProps) {
                             </Box>
                         </Box>
 
-                        {/* Nút Xoá */}
-                        <Box position="absolute" top={8} right={8}>
-                            <Chip
-                                icon={<DeleteForeverIcon />}
-                                label={isLoading ? "Delete..." : "Delete"}
-                                onClick={handleClick}
-                                disabled={isLoading}
-                                sx={{ backgroundColor: 'transparent', cursor: "pointer" }}
-                            />
-                        </Box>
+
                     </Box>
-                </Card>
+                </Box>
+            </CardActionArea>
+            {/* Nút Xoá */}
+            <Box position="absolute" bottom={8} right={8} zIndex={2}>
+                <Chip
+                    icon={<DeleteForeverIcon />}
+                    label={isLoading ? "Delete..." : "Delete"}
+                    onClick={handleClick}
+                    disabled={isLoading}
+                    sx={{ backgroundColor: 'transparent', cursor: "pointer" }}
+                />
             </Box>
-        </>
+        </Card>
     );
 }
