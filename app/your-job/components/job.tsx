@@ -48,15 +48,13 @@ export default function Job({ job, setJobs, onAlert }: JobProps) {
             } else {
                 onAlert('Xóa thất bại!', 'error');
             }
-        } catch (error) {
+        } catch (e) {
+            console.error(e);
             onAlert('Có lỗi xảy ra!', 'error');
         } finally {
             setLoading(false);
         }
     }
-    useEffect(() => {
-        console.log("Open state changed to:", open);
-    }, [open]);  // Lắng nghe thay đổi của open
 
     return (
         <Card sx={{ position: "relative", p: 2, width: '100%' }}>
