@@ -21,7 +21,7 @@ import { provinces } from "../common/constants/provinces";
 
 
 export default function SearchBar() {
-    const { jobs, setJobs, setLoading } = useContext(ThemeModeContext);
+    const { setJobs, setLoading } = useContext(ThemeModeContext);
     const [selectedProvinces, setSelectedProvinces] = useState<string[]>([]);
 
 
