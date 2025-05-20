@@ -1,5 +1,5 @@
 import { Box, Card, CardActionArea, Chip, Stack, Typography } from "@mui/material";
-import { JobItem, JobValue } from "./interface/job";
+import { JobItem } from "./interface/job";
 import CompanyLogo from "./company-logo";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import addJob from "./actions/add-job";
@@ -35,6 +35,7 @@ export default function Job({ job, onAlert }: JobProps) {
             }
         }
         catch (error) {
+            console.error(error);
             onAlert('Có lỗi xảy ra!', 'error');
         }
         finally {

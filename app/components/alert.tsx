@@ -1,5 +1,4 @@
 import { Alert, Snackbar } from "@mui/material";
-import { useEffect } from "react";
 
 type AlertBoxProps = {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;

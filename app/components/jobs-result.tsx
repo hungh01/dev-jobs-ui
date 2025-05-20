@@ -2,8 +2,7 @@ import { Box, Grid, Pagination } from "@mui/material";
 
 import Job from "./job";
 import { JobItem } from "./interface/job";
-import { useContext, useState } from "react";
-import { ThemeModeContext } from "../providers";
+import { useState } from "react";
 import Circular from "./circular";
 import AlertBox from "./alert";
 

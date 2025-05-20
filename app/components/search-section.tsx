@@ -3,18 +3,14 @@
 import {
     Box,
     Button,
-    Checkbox,
     Chip,
     Divider,
     FormControl,
-    FormControlLabel,
-    FormGroup,
     InputLabel,
     MenuItem,
     OutlinedInput,
     Select,
     TextField,
-    Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useContext, useState } from "react";
@@ -28,11 +24,6 @@ export default function SearchBar() {
     const { jobs, setJobs, setLoading } = useContext(ThemeModeContext);
     const [selectedProvinces, setSelectedProvinces] = useState<string[]>([]);
 
-    const handleChange = (key: string) => {
-        setSelectedProvinces(prev =>
-            prev.includes(key) ? prev.filter(p => p !== key) : [...prev, key]
-        );
-    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
