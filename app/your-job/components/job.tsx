@@ -2,7 +2,7 @@ import { Box, Card, CardActionArea, Chip, Stack, Typography } from "@mui/materia
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import CompanyLogo from "@/app/components/company-logo";
 import { JobItem, JobValue } from "@/app/components/interface/job";
